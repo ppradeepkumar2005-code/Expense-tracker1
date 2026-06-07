@@ -1,5 +1,9 @@
 import streamlit as st
 import requests
+import time
+
+# Backend URL
+API_URL = "https://expense-trackerproject-7.onrender.com"
 
 st.set_page_config(
     page_title="Register",
@@ -18,11 +22,10 @@ if st.button("Register"):
         st.warning("Please fill all fields")
 
     else:
-
         try:
 
             response = requests.post(
-                API_URL = "https://expense-trackerproject-7.onrender.com",
+                f"{API_URL}/auth/register",
                 json={
                     "username": username,
                     "password": password
@@ -34,7 +37,6 @@ if st.button("Register"):
                 st.success("Registration Successful ✅")
                 st.info("Redirecting to Login Page...")
 
-                import time
                 time.sleep(2)
 
                 st.switch_page("pages/1_Login.py")
@@ -45,6 +47,7 @@ if st.button("Register"):
                     error_data = response.json()
 
                     if "already" in str(error_data).lower():
+
                         st.warning(
                             "You already have an account. Please login."
                         )
@@ -53,6 +56,7 @@ if st.button("Register"):
                             st.switch_page("pages/1_Login.py")
 
                     else:
+
                         st.error(
                             error_data.get(
                                 "detail",
@@ -61,6 +65,7 @@ if st.button("Register"):
                         )
 
                 except Exception:
+
                     st.error(
                         f"Server Error ({response.status_code})"
                     )
@@ -68,7 +73,7 @@ if st.button("Register"):
         except requests.exceptions.ConnectionError:
 
             st.error(
-                "Cannot connect to backend. Start FastAPI server first."
+                "Cannot connect to backend."
             )
 
         except Exception as e:
