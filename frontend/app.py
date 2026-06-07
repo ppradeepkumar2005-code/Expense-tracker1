@@ -2,6 +2,8 @@ import streamlit as st
 
 st.set_page_config(page_title="Expense Tracker", layout="wide")
 
+# ================= API CONFIG =================
+API_URL = "https://expense-trackerproject-7.onrender.com"
 # ---------------- CSS STYLE ----------------
 st.markdown("""
 <style>
@@ -18,33 +20,29 @@ st.markdown("""
     color: gray;
 }
 
-/* SECTION TITLE */
 .section-title {
     font-size: 28px;
     font-weight: bold;
     margin-top: 10px;
-    color:drakblue;
+    color: blue;
     text-align: center;
 }
 
-/* CARD DESIGN */
 .card {
     background: linear-gradient(135deg, #ffffff, #e8f0fe);
-    padding: 2px;
+    padding: 20px;
     border-radius: 15px;
     box-shadow: 2px 4px 15px rgba(0,0,0,0.1);
     text-align: center;
     height: 170px;
-    color: black;   /* ✅ TEXT COLOR BLACK */
+    color: black;
     transition: 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 2px 8px 20px rgba(0,0,0,0.2);
 }
 
-/* FOOTER */
 .footer {
     text-align: center;
     color: gray;
@@ -55,7 +53,6 @@ st.markdown("""
 
 # ---------------- HEADER ----------------
 st.markdown('<div class="main-title">💰 Expense Tracker App</div>', unsafe_allow_html=True)
-
 st.markdown('<div class="sub-text">Track expenses, income & savings smartly</div>', unsafe_allow_html=True)
 
 st.write("")
@@ -102,3 +99,14 @@ with col5:
     if st.button("📝 Register"):
         st.switch_page("pages/0_Register.py")
 
+# ---------------- BACKEND CHECK ----------------
+import requests
+
+try:
+    r = requests.get(f"{API_URL}/docs")
+    st.success("✅ Backend Connected")
+except:
+    st.error("❌ Cannot connect to backend. Start FastAPI server first.")
+
+# ---------------- FOOTER ----------------
+st.markdown('<div class="footer">Made with ❤️ using Streamlit</div>', unsafe_allow_html=True)

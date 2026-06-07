@@ -22,7 +22,7 @@ if st.button("Register"):
         try:
 
             response = requests.post(
-                "http://127.0.0.1:8000/auth/auth/register",
+                API_URL = "https://expense-trackerproject-7.onrender.com",
                 json={
                     "username": username,
                     "password": password
