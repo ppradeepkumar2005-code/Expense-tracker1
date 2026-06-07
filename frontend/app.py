@@ -99,14 +99,6 @@ with col5:
     if st.button("📝 Register"):
         st.switch_page("pages/0_Register.py")
 
-# ---------------- BACKEND CHECK ----------------
-import requests
-
-try:
-    r = requests.get(f"{API_URL}/docs")
-    st.success("✅ Backend Connected")
-except:
-    st.error("❌ Cannot connect to backend. Start FastAPI server first.")
 
 # ---------------- FOOTER ----------------
 st.markdown('<div class="footer">Made with ❤️ using Streamlit</div>', unsafe_allow_html=True)
