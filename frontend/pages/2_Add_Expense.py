@@ -4,7 +4,11 @@ import pandas as pd
 from datetime import date
 
 # ---------------- PAGE CONFIG ----------------
-st.set_page_config(page_title="Add Expense", page_icon="➕", layout="wide")
+st.set_page_config(
+    page_title="Add Expense",
+    page_icon="➕",
+    layout="wide"
+)
 
 # ---------------- AUTH CHECK ----------------
 if "token" not in st.session_state:
@@ -13,27 +17,59 @@ if "token" not in st.session_state:
 
 st.title("➕ Add / Manage Expenses")
 
-API_URL = "http://127.0.0.1:8000"
+# ---------------- BACKEND URL ----------------
+API_URL = "https://expense-trackerproject-7.onrender.com"
 
 headers = {
     "Authorization": f"Bearer {st.session_state['token']}"
 }
 
-# ---------------- API CALL ----------------
+# ---------------- FETCH EXPENSES ----------------
 def fetch_expenses():
-    res = requests.get(f"{API_URL}/expenses", headers=headers)
-    if res.status_code == 200:
-        return res.json()
-    return []
+    try:
+        res = requests.get(
+            f"{API_URL}/expenses",
+            headers=headers,
+            timeout=20
+        )
+
+        if res.status_code == 200:
+            return res.json()
+
+        st.error(f"API Error: {res.status_code}")
+        return []
+
+    except Exception as e:
+        st.error(f"Connection Error: {e}")
+        return []
 
 # ---------------- ADD EXPENSE ----------------
 st.subheader("➕ Add Expense")
 
 with st.form("add_form"):
 
-    amount = st.number_input("Amount", min_value=0.0, format="%.2f")
-    category = st.selectbox("Category", ["Food", "Transport", "Bills", "Shopping", "Other"])
-    expense_date = st.date_input("Date", value=date.today())
+    amount = st.number_input(
+        "Amount",
+        min_value=0.0,
+        format="%.2f"
+    )
+
+    category = st.selectbox(
+        "Category",
+        [
+            "Food",
+            "Transport",
+            "Bills",
+            "Shopping",
+            "Other"
+        ]
+    )
+
+    expense_date = st.date_input(
+        "Date",
+        value=date.today()
+    )
+
     note = st.text_area("Note")
 
     submit = st.form_submit_button("Add Expense")
@@ -47,13 +83,24 @@ if submit:
         "note": note
     }
 
-    res = requests.post(f"{API_URL}/expenses", json=payload, headers=headers)
+    try:
 
-    if res.status_code in [200, 201]:
-        st.success("Expense Added ✅")
-        st.rerun()
-    else:
-        st.error(res.text)
+        res = requests.post(
+            f"{API_URL}/expenses",
+            json=payload,
+            headers=headers,
+            timeout=20
+        )
+
+        if res.status_code in [200, 201]:
+            st.success("Expense Added Successfully ✅")
+            st.rerun()
+
+        else:
+            st.error(res.text)
+
+    except Exception as e:
+        st.error(str(e))
 
 # ---------------- SHOW EXPENSES ----------------
 st.divider()
@@ -65,72 +112,10 @@ if data:
 
     df = pd.DataFrame(data)
 
-    # ---------------- EDIT ----------------
-    for i, row in df.iterrows():
-
-        col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 2])
-
-        with col1:
-            st.write(row["amount"])
-
-        with col2:
-            st.write(row["category"])
-
-        with col3:
-            st.write(row["date"])
-
-        with col4:
-
-            if st.button("✏️ Edit", key=f"edit_{row['id']}"):
-
-                new_amount = st.number_input(
-                    "New Amount",
-                    value=float(row["amount"]),
-                    key=f"amt_{row['id']}"
-                )
-
-                new_category = st.selectbox(
-                    "New Category",
-                    ["Food", "Transport", "Bills", "Shopping", "Other"],
-                    index=["Food", "Transport", "Bills", "Shopping", "Other"].index(row["category"]),
-                    key=f"cat_{row['id']}"
-                )
-
-                if st.button("Save", key=f"save_{row['id']}"):
-
-                    update_payload = {
-                        "amount": new_amount,
-                        "category": new_category,
-                        "date": row["date"],
-                        "note": row.get("note", "")
-                    }
-
-                    res = requests.put(
-                        f"{API_URL}/expenses/{row['id']}",
-                        json=update_payload,
-                        headers=headers
-                    )
-
-                    if res.status_code == 200:
-                        st.success("Updated ✅")
-                        st.rerun()
-                    else:
-                        st.error(res.text)
-
-        with col5:
-
-            if st.button("🗑️ Delete", key=f"del_{row['id']}"):
-
-                res = requests.delete(
-                    f"{API_URL}/expenses/{row['id']}",
-                    headers=headers
-                )
-
-                if res.status_code == 204:
-                    st.success("Deleted ✅")
-                    st.rerun()
-                else:
-                    st.error(res.text)
+    st.dataframe(
+        df,
+        use_container_width=True
+    )
 
 else:
     st.info("No expenses found")
