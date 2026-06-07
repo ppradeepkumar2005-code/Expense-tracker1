@@ -1,7 +1,6 @@
 import streamlit as st
 import requests
 
-# Backend URL
 API_URL = "https://expense-trackerproject-7.onrender.com"
 
 st.set_page_config(
@@ -10,74 +9,35 @@ st.set_page_config(
     layout="centered"
 )
 
-# If already logged in
-if "token" in st.session_state:
-    st.switch_page("pages/1_Dashboard.py")
-
 st.title("🔐 Expense Tracker Login")
-st.markdown("Login to continue")
 
 username = st.text_input("Username")
 password = st.text_input("Password", type="password")
 
-if st.button("Login", use_container_width=True):
+if st.button("Login"):
 
-    if not username or not password:
-        st.warning("Please fill all fields")
+    try:
 
-    else:
-        try:
+        response = requests.post(
+            f"{API_URL}/auth/auth/login",
+            json={
+                "username": username,
+                "password": password
+            }
+        )
 
-            response = requests.post(
-                f"{API_URL}/auth/login",
-                data={
-                    "username": username,
-                    "password": password
-                }
-            )
+        if response.status_code == 200:
 
-            if response.status_code == 200:
+            data = response.json()
 
-                data = response.json()
+            st.session_state["token"] = data["access_token"]
 
-                st.session_state["token"] = data["access_token"]
+            st.success("Login Successful ✅")
 
-                st.success("Login Successful ✅")
+            st.switch_page("pages/1_Dashboard.py")
 
-                st.switch_page("pages/1_Dashboard.py")
+        else:
+            st.error(response.text)
 
-            else:
-
-                try:
-                    error_data = response.json()
-
-                    st.error(
-                        error_data.get(
-                            "detail",
-                            "Invalid Username or Password"
-                        )
-                    )
-
-                except Exception:
-                    st.error("Invalid Username or Password")
-
-        except requests.exceptions.ConnectionError:
-
-            st.error(
-                "Cannot connect to backend."
-            )
-
-        except Exception as e:
-
-            st.error(str(e))
-
-st.markdown("---")
-
-col1, col2, col3 = st.columns([1, 2, 1])
-
-with col2:
-    if st.button(
-        "📝 Create New Account",
-        use_container_width=True
-    ):
-        st.switch_page("pages/0_Register.py")
+    except Exception as e:
+        st.error(str(e))

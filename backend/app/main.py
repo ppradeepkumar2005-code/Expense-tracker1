@@ -17,17 +17,32 @@ app = FastAPI(
 )
 
 # ---------------- ROUTERS ----------------
-app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(auth_router)
 
-app.include_router(expenses_router, prefix="/expenses", tags=["Expenses"])
+app.include_router(
+    expenses_router,
+    prefix="/expenses",
+    tags=["Expenses"]
+)
 
-app.include_router(income_router, prefix="/income", tags=["Income"])
+app.include_router(
+    income_router,
+    prefix="/income",
+    tags=["Income"]
+)
 
-app.include_router(categories_router, prefix="/categories", tags=["Categories"])
+app.include_router(
+    categories_router,
+    prefix="/categories",
+    tags=["Categories"]
+)
 
-app.include_router(summary_router, prefix="/summary", tags=["Summary"])
+app.include_router(
+    summary_router,
+    prefix="/summary",
+    tags=["Summary"]
+)
 
-app.include_router(auth_router, prefix="/auth")
 # ---------------- HEALTH CHECK ----------------
 @app.get("/health")
 def health():
