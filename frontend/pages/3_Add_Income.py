@@ -10,7 +10,9 @@ if "token" not in st.session_state:
 st.set_page_config(page_title="Add Income", layout="centered")
 st.title("💰 Add Income")
 
-API_URL = "http://localhost:8000"
+# 🔥 CHANGE THIS (IMPORTANT)
+API_URL = "https://your-backend-name.onrender.com"  
+# OR for local: "http://127.0.0.1:8000"
 
 headers = {
     "Authorization": f"Bearer {st.session_state['token']}"
@@ -18,8 +20,22 @@ headers = {
 
 # ---------------- SUBMIT INCOME ----------------
 def add_income(payload):
-    res = requests.post(f"{API_URL}/income", json=payload, headers=headers)
-    return res.status_code == 200
+    try:
+        res = requests.post(
+            f"{API_URL}/income",
+            json=payload,
+            headers=headers,
+            timeout=10
+        )
+
+        # Debug (optional)
+        # st.write(res.status_code, res.text)
+
+        return res.status_code == 200
+
+    except requests.exceptions.RequestException as e:
+        st.error(f"Connection Error: {e}")
+        return False
 
 # ---------------- FORM ----------------
 with st.form("income_form"):
@@ -36,7 +52,7 @@ with st.form("income_form"):
             st.error("Please enter income source")
         else:
             payload = {
-                "amount": amount,
+                "amount": float(amount),
                 "source": source,
                 "date": str(income_date)
             }
