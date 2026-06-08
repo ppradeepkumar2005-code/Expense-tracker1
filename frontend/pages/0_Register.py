@@ -20,11 +20,9 @@ if st.button("Register"):
         st.warning("Please fill all fields")
 
     else:
-
         try:
-
             response = requests.post(
-                f"{API_URL}/auth/auth/register",
+                f"{API_URL}/auth/register",   # ✅ FIXED HERE
                 json={
                     "username": username,
                     "password": password
@@ -32,7 +30,6 @@ if st.button("Register"):
             )
 
             if response.status_code in [200, 201]:
-
                 st.success("Registration Successful ✅")
                 st.switch_page("pages/1_Login.py")
 

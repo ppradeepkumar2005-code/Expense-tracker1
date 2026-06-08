@@ -17,9 +17,8 @@ password = st.text_input("Password", type="password")
 if st.button("Login"):
 
     try:
-
         response = requests.post(
-            f"{API_URL}/auth/auth/login",
+            f"{API_URL}/auth/login",   # ✅ FIXED HERE
             json={
                 "username": username,
                 "password": password
@@ -27,7 +26,6 @@ if st.button("Login"):
         )
 
         if response.status_code == 200:
-
             data = response.json()
 
             st.session_state["token"] = data["access_token"]
