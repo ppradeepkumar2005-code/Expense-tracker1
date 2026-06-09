@@ -1,9 +1,11 @@
 from sqlalchemy import Column, Integer, String, Float, Date, ForeignKey
 from sqlalchemy.orm import relationship
+
 from app.core.database import Base
 
 
-# ---------------- USER TABLE ----------------
+# ---------------- USER ----------------
+
 class User(Base):
     __tablename__ = "users"
 
@@ -15,16 +17,18 @@ class User(Base):
     incomes = relationship("Income", back_populates="owner")
 
 
-# ---------------- CATEGORY TABLE ----------------
+# ---------------- CATEGORY ----------------
+
 class Category(Base):
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, nullable=False)  # Food, Transport, Bills, etc.
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # None = default category
+    name = Column(String, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
 
-# ---------------- EXPENSE TABLE ----------------
+# ---------------- EXPENSE ----------------
+
 class Expense(Base):
     __tablename__ = "expenses"
 
@@ -33,12 +37,14 @@ class Expense(Base):
     category = Column(String, nullable=False)
     date = Column(Date, nullable=False)
     note = Column(String, nullable=True)
+
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     owner = relationship("User", back_populates="expenses")
 
 
-# ---------------- INCOME TABLE ----------------
+# ---------------- INCOME ----------------
+
 class Income(Base):
     __tablename__ = "income"
 
@@ -46,6 +52,7 @@ class Income(Base):
     amount = Column(Float, nullable=False)
     source = Column(String, nullable=False)
     date = Column(Date, nullable=False)
+
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     owner = relationship("User", back_populates="incomes")

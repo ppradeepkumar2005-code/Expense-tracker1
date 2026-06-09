@@ -1,7 +1,7 @@
 import streamlit as st
 import requests
 
-API_URL = "https://expense-trackerproject-7.onrender.com"
+from utils.config import API_URL
 
 st.set_page_config(
     page_title="Register",

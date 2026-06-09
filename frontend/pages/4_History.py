@@ -11,7 +11,7 @@ st.set_page_config(page_title="Expense History", layout="wide")
 st.title("📜 Transaction History")
 
 # Render Backend URL
-API_URL = "https://expense-trackerproject-7.onrender.com"
+from utils.config import API_URL
 
 headers = {
     "Authorization": f"Bearer {st.session_state['token']}"

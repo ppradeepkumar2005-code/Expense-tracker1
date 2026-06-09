@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="Expense Tracker", layout="wide")
 
 # ================= API CONFIG =================
-API_URL = "https://expense-trackerproject-7.onrender.com"
+from utils.config import API_URL
 # ---------------- CSS STYLE ----------------
 st.markdown("""
 <style>

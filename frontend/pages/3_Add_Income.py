@@ -11,7 +11,7 @@ st.set_page_config(page_title="Add Income", layout="centered")
 st.title("💰 Add Income")
 
 # ✅ FIXED BACKEND URL
-API_URL = "https://expense-trackerproject-7.onrender.com"
+from utils.config import API_URL
 
 headers = {
     "Authorization": f"Bearer {st.session_state['token']}"

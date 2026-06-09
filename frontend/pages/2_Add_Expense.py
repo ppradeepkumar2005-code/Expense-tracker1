@@ -18,7 +18,7 @@ if "token" not in st.session_state:
 st.title("➕ Add / Manage Expenses")
 
 # ---------------- BACKEND URL ----------------
-API_URL = "https://expense-trackerproject-7.onrender.com"
+from utils.config import API_URL
 
 headers = {
     "Authorization": f"Bearer {st.session_state['token']}"

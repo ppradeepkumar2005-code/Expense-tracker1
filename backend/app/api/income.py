@@ -2,11 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
-from app.core.auth import get_current_user
-from app.models.models import User, Income
-from app.schemas.schemas import IncomeCreate, IncomeUpdate, IncomeOut
 
-# ❌ REMOVE prefix here
+from app.models.models import User, Income
+
+from app.schemas.schemas import (
+    IncomeCreate,
+    IncomeUpdate,
+    IncomeOut
+)
+
+from app.core.auth import get_current_user
+
+
+# No prefix here
 router = APIRouter(tags=["Income"])
 
 
@@ -16,10 +24,15 @@ def create_income(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    income = Income(**data.dict(), user_id=user.id)
+    income = Income(
+        **data.dict(),
+        user_id=user.id
+    )
+
     db.add(income)
     db.commit()
     db.refresh(income)
+
     return income
 
 
@@ -28,10 +41,12 @@ def list_income(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    return db.query(Income)\
-        .filter(Income.user_id == user.id)\
-        .order_by(Income.date.desc())\
+    return (
+        db.query(Income)
+        .filter(Income.user_id == user.id)
+        .order_by(Income.date.desc())
         .all()
+    )
 
 
 @router.put("/{income_id}", response_model=IncomeOut)
@@ -47,13 +62,17 @@ def update_income(
     ).first()
 
     if not income:
-        raise HTTPException(status_code=404, detail="Income not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Income not found"
+        )
 
     for field, value in data.dict(exclude_unset=True).items():
         setattr(income, field, value)
 
     db.commit()
     db.refresh(income)
+
     return income
 
 
@@ -69,7 +88,12 @@ def delete_income(
     ).first()
 
     if not income:
-        raise HTTPException(status_code=404, detail="Income not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Income not found"
+        )
 
     db.delete(income)
     db.commit()
+
+    return None

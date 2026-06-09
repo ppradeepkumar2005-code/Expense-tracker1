@@ -4,11 +4,19 @@ from typing import Optional
 from datetime import date
 
 from app.core.database import get_db
-from app.core.auth import get_current_user
-from app.models.models import User, Expense
-from app.schemas.schemas import ExpenseCreate, ExpenseUpdate, ExpenseOut
 
-# ❌ REMOVE prefix here
+from app.models.models import User, Expense
+
+from app.schemas.schemas import (
+    ExpenseCreate,
+    ExpenseUpdate,
+    ExpenseOut
+)
+
+from app.core.auth import get_current_user
+
+
+# No prefix here
 router = APIRouter(tags=["Expenses"])
 
 
@@ -18,10 +26,15 @@ def create_expense(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    expense = Expense(**data.dict(), user_id=user.id)
+    expense = Expense(
+        **data.dict(),
+        user_id=user.id
+    )
+
     db.add(expense)
     db.commit()
     db.refresh(expense)
+
     return expense
 
 
@@ -33,18 +46,28 @@ def list_expenses(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user)
 ):
-    query = db.query(Expense).filter(Expense.user_id == user.id)
+    query = db.query(Expense).filter(
+        Expense.user_id == user.id
+    )
 
     if start_date:
-        query = query.filter(Expense.date >= start_date)
+        query = query.filter(
+            Expense.date >= start_date
+        )
 
     if end_date:
-        query = query.filter(Expense.date <= end_date)
+        query = query.filter(
+            Expense.date <= end_date
+        )
 
     if category:
-        query = query.filter(Expense.category == category)
+        query = query.filter(
+            Expense.category == category
+        )
 
-    return query.order_by(Expense.date.desc()).all()
+    return query.order_by(
+        Expense.date.desc()
+    ).all()
 
 
 @router.put("/{expense_id}", response_model=ExpenseOut)
@@ -60,13 +83,17 @@ def update_expense(
     ).first()
 
     if not expense:
-        raise HTTPException(status_code=404, detail="Expense not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Expense not found"
+        )
 
     for field, value in data.dict(exclude_unset=True).items():
         setattr(expense, field, value)
 
     db.commit()
     db.refresh(expense)
+
     return expense
 
 
@@ -82,7 +109,12 @@ def delete_expense(
     ).first()
 
     if not expense:
-        raise HTTPException(status_code=404, detail="Expense not found")
+        raise HTTPException(
+            status_code=404,
+            detail="Expense not found"
+        )
 
     db.delete(expense)
     db.commit()
+
+    return None
