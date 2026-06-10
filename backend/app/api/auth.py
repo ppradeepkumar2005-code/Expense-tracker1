@@ -15,6 +15,8 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/register")
 def register(data: UserCreate, db: Session = Depends(get_db)):
+    print("REGISTER USERNAME:", data.username)
+
     existing = db.query(User).filter(
         User.username == data.username
     ).first()
