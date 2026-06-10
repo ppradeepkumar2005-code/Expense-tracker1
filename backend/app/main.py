@@ -10,18 +10,12 @@ from app.api.categories_summary import (
     summary_router
 )
 
-# ---------------- CREATE TABLES ----------------
-
 Base.metadata.create_all(bind=engine)
-
-# ---------------- APP INIT ----------------
 
 app = FastAPI(
     title="Expense Tracker API",
     version="1.0.0"
 )
-
-# ---------------- ROUTERS ----------------
 
 app.include_router(auth_router)
 
@@ -49,13 +43,9 @@ app.include_router(
     tags=["Summary"]
 )
 
-# ---------------- HEALTH CHECK ----------------
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-# ---------------- ROOT ----------------
 
 @app.get("/")
 def root():

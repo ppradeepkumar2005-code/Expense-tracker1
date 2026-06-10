@@ -4,50 +4,86 @@ st.set_page_config(page_title="Expense Tracker", layout="wide")
 
 # ================= API CONFIG =================
 from utils.config import API_URL
-# ---------------- CSS STYLE ----------------
 st.markdown("""
 <style>
+
+
+
+/* Main Title */
 .main-title {
-    font-size: 52px;
-    font-weight: bold;
+    font-size: 55px;
+    font-weight: 800;
     text-align: center;
-    color: #2E86C1;
+    color: #1E3A8A;
+    margin-bottom: 10px;
 }
 
+/* Subtitle */
 .sub-text {
-    font-size: 18px;
+    font-size: 20px;
     text-align: center;
-    color: gray;
+    color: #555;
+    margin-bottom: 30px;
 }
 
+/* Section Title */
 .section-title {
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
-    margin-top: 10px;
-    color: blue;
     text-align: center;
+    color: #2563EB;
+    margin-bottom: 25px;
 }
 
+/* Equal Size Cards */
 .card {
-    background: linear-gradient(135deg, #ffffff, #e8f0fe);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 2px 4px 15px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    height: 250px;   /* Same height for all cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+    transition: all 0.3s ease;
     text-align: center;
-    height: 170px;
-    color: black;
-    transition: 0.3s;
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(37,99,235,0.25);
 }
 
+.card h3 {
+    color: #2563EB;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.card p {
+    color: #444;
+    font-size: 17px;
+    line-height: 1.8;
+}
+
+/* Buttons */
+div.stButton > button {
+    width: 100%;
+    height: 55px;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Footer */
 .footer {
     text-align: center;
-    color: gray;
     margin-top: 50px;
+    color: #777;
+    font-size: 15px;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
