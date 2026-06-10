@@ -1,3 +1,3 @@
 import os
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+API_URL = "https://expense-tracker-backend.onrender.com"

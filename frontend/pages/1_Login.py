@@ -18,7 +18,7 @@ if st.button("Login"):
 
     try:
         response = requests.post(
-            f"{API_URL}/auth/login",   # ✅ FIXED HERE
+            f"{API_URL}/auth/login",
             json={
                 "username": username,
                 "password": password
