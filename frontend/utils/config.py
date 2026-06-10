@@ -1,3 +1,3 @@
 import os
 
-API_URL = "https://expense-tracker-backend.onrender.com"
+API_URL = "https://expense-tracker1-4jte.onrender.com"
