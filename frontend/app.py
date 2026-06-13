@@ -125,16 +125,28 @@ with col3:
 st.write("")
 
 # ---------------- BUTTONS ----------------
-col4, col5 = st.columns(2)
+if "token" in st.session_state:
+    col4, col5 = st.columns(2)
 
-with col4:
-    if st.button("🔐 Login"):
-        st.switch_page("pages/1_Login.py")
+    with col4:
+        if st.button("📊 Dashboard"):
+            st.switch_page("pages/1_Dashboard.py")
 
-with col5:
-    if st.button("📝 Register"):
-        st.switch_page("pages/0_Register.py")
+    with col5:
+        if st.button("🚪 Logout"):
+            del st.session_state["token"]
+            st.rerun()
+else:
+    col4, col5 = st.columns(2)
+
+    with col4:
+        if st.button("🔐 Login"):
+            st.switch_page("pages/1_Login.py")
+
+    with col5:
+        if st.button("📝 Register"):
+            st.switch_page("pages/0_Register.py")
 
 
-# ---------------- FOOTER ----------------
-st.markdown('<div class="footer">Made with ❤️ using Streamlit</div>', unsafe_allow_html=True)
+
+
